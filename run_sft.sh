@@ -1,0 +1,23 @@
+CUDA_VISIBLE_DEVICES=0 torchrun --nproc_per_node 1 supervised_finetuning.py \
+    --model_type bloom --model_name_or_path bloomz-560m \
+    --train_file_dir ./data/finetune --validation_file_dir ./data/finetune \
+    --per_device_train_batch_size 1 --per_device_eval_batch_size 1 \
+    --do_train --do_eval --use_peft True --fp16 \
+    --num_train_epochs 0.11 --learning_rate 2e-5 --warmup_ratio 0.05 --weight_decay 0.05 \
+    --logging_strategy steps --logging_steps 10 \
+    --evaluation_strategy steps --eval_steps 50 \
+    --save_strategy steps --save_steps 500 --save_total_limit 3 \
+    --gradient_accumulation_steps 1 \
+    --output_dir ./output/outputs-sft-v1 --overwrite_output_dir \
+    --ddp_timeout 30000 \
+    --logging_first_step True \
+    --target_modules all \
+    --lora_rank 8 --lora_alpha 16 --lora_dropout 0.05 \
+    --report_to tensorboard \
+    --ddp_find_unused_parameters False \
+    --gradient_checkpointing True \
+    --max_train_samples 1000 --max_eval_samples 10 \
+    --preprocessing_num_workers 1 \
+    --max_source_length 256 --max_target_length 256 \
+    --torch_dtype float16 \
+    --device_map auto 
